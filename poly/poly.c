@@ -146,11 +146,16 @@ p_polyf_t multiplication_polynome_scalaire (p_polyf_t p, float alpha)
 
 float eval_polynome (p_polyf_t p, float x)
 {
-  /* 
-     valeur du polynome pour la valeur de x
-  */
-
-  return 0.0 ;
+  if(p==NULL){
+    exit(-1);
+  }
+  float tmp = 1;
+  float result = 0.0;
+  for(int i=0;i<p->degre;i++){
+    result += tmp*(p->coeff[i]);
+    tmp*=x;
+  }
+  return result;
 }
 
 p_polyf_t multiplication_polynomes (p_polyf_t p1, p_polyf_t p2)
@@ -174,8 +179,6 @@ p_polyf_t puissance_polynome (p_polyf_t p, int n)
 
   return res ;
 }
-
-
 
 p_polyf_t composition_polynome (p_polyf_t p, p_polyf_t q)
 {
