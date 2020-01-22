@@ -20,8 +20,11 @@ int main (int argc, char **argv)
   ecrire_polynome_float (p1) ;
   ecrire_polynome_float (p2) ;
 
-  /*
-    ajouter du code pour tester les fonctions
-    sur les polynomes
-  */
+  if(egalite_polynome(p1,p2)){
+    fprintf (stdout, "Les poplynômes sont égaux.\n");
+  }else
+  {
+    fprintf (stdout, "Les polynômes sont différents.\n");
+  }
+  
 }

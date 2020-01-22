@@ -94,11 +94,18 @@ void ecrire_polynome_float (p_polyf_t p)
 
 int egalite_polynome (p_polyf_t p1, p_polyf_t p2)
 {
-  /*
-    tester les deux polynomes p1 et p2
-  */
-
-  return 0 ;
+  if(p1==NULL||p2==NULL){
+    return 0;
+  }
+  if(p1->degre==p2->degre){
+    for(int i=0;i<p1->degre;i++){
+      if(p1->coeff[i]!=p2->coeff[i]){
+        return 0;
+      }
+    }
+    return 1;
+  }
+  return 0;
 }
 
 p_polyf_t addition_polynome (p_polyf_t p1, p_polyf_t p2)
