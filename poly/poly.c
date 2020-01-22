@@ -98,7 +98,7 @@ int egalite_polynome (p_polyf_t p1, p_polyf_t p2)
     return 0;
   }
   if(p1->degre==p2->degre){
-    for(int i=0;i<p1->degre;i++){
+    for(int i=0;i<=p1->degre;i++){
       if(p1->coeff[i]!=p2->coeff[i]){
         return 0;
       }
@@ -137,7 +137,7 @@ p_polyf_t addition_polynome (p_polyf_t p1, p_polyf_t p2)
 p_polyf_t multiplication_polynome_scalaire (p_polyf_t p, float alpha)
 {
   p_polyf_t resultat=creer_polynome(p->degre);
-  for(int i=0;i<p->degre;i++){
+  for(int i=0;i<=p->degre;i++){
     resultat->coeff[i]=p->coeff[i]*alpha;
   }
 
@@ -151,7 +151,7 @@ float eval_polynome (p_polyf_t p, float x)
   }
   float tmp = 1;
   float result = 0.0;
-  for(int i=0;i<p->degre;i++){
+  for(int i=0;i<=p->degre;i++){
     result += tmp*(p->coeff[i]);
     tmp*=x;
   }
@@ -161,6 +161,7 @@ float eval_polynome (p_polyf_t p, float x)
 p_polyf_t multiplication_polynomes (p_polyf_t p1, p_polyf_t p2)
 {
   p_polyf_t resultat=creer_polynome(p1->degre+p2->degre);
+  init_polynome(resultat,0);
   for(int i=0;i<=p1->degre;i++){
     for(int j=0;j<=p2->degre;j++){
       resultat->coeff[i+j]+=p1->coeff[i]*p2->coeff[j];
@@ -175,7 +176,7 @@ p_polyf_t puissance_polynome (p_polyf_t p, int n)
   if(n<=1)return p;
   p_polyf_t res;
   if(n%2==0)res=puissance_polynome(multiplication_polynomes(p,p),n/2);
-  else res=multiplication_polynomes(p,(multiplication_polynomes(p,p),n-1/2));
+  else res=multiplication_polynomes(p,puissance_polynome(multiplication_polynomes(p,p),n-1/2));
 
   return res ;
 }
@@ -183,12 +184,15 @@ p_polyf_t puissance_polynome (p_polyf_t p, int n)
 p_polyf_t composition_polynome (p_polyf_t p, p_polyf_t q)
 {
   p_polyf_t tmp;
+  tmp = creer_polynome(0);
+  init_polynome(tmp,1);
   p_polyf_t res=creer_polynome(q->degre*p->degre);
+  init_polynome(res,0);
   for(int i=0;i<=p->degre;i++){
-    tmp=multiplication_polynome_scalaire(puissance_polynome(q,i),p->coeff[i]);
     for(int j=0;j<=tmp->degre;j++){
-      res->coeff[j]+=tmp->coeff[j];
+      res->coeff[j]+=p->coeff[i]*(tmp->coeff[j]);
     }
+    tmp=multiplication_polynomes(tmp,q);
   }
   return res;
 }

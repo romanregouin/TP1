@@ -6,11 +6,11 @@
 
 int main (int argc, char **argv)
 {
-  p_polyf_t p1, p2 ;
+  p_polyf_t p1, p2, p3, p5, p6, p7;
   
-  if (argc != 3)
+  if (argc != 6)
     {
-      fprintf (stderr, "deux paramètres (polynomes,fichiers) sont à passer \n") ;
+      fprintf (stderr, "5 paramètres (polynomes,fichiers,scalaire,x,puissance) sont à passer \n") ;
       exit (-1) ;
     }
       
@@ -26,5 +26,37 @@ int main (int argc, char **argv)
   {
     fprintf (stdout, "Les polynômes sont différents.\n");
   }
+
+  float a = atof(argv [3]);
+
+  fprintf(stdout, "Résultat de p1 * %f :\n",a);
+  p3 = multiplication_polynome_scalaire(p1,a);
+  ecrire_polynome_float(p3);
+  fprintf(stdout, "Résultat de p2 * %f :\n",a);
+  p3 = multiplication_polynome_scalaire(p2,a);
+  ecrire_polynome_float(p3);
+
+  float x = atof(argv [4]);
   
+  fprintf(stdout, "Résultat de p1(%f)\n",x);
+  fprintf(stdout, "Result : %f\n",eval_polynome(p1,x));
+  fprintf(stdout, "Résultat de p2(%f)\n",x);
+  fprintf(stdout, "Result : %f\n",eval_polynome(p2,x));
+
+  fprintf(stdout, "Multiplication des 2 polynômes entre eux :\n");
+  p5 = multiplication_polynomes(p1,p2);
+  ecrire_polynome_float(p5);
+
+  int n = atoi(argv [5]);
+
+  fprintf(stdout, "Resultat de la puissance du polynôme p1 par %d\n",n);
+  p6 = puissance_polynome (p1,n);
+  ecrire_polynome_float(p6);
+  fprintf(stdout, "Resultat de la puissance du polynôme p2 par %d\n",n);
+  p6 = puissance_polynome (p2,n);
+  ecrire_polynome_float(p6);
+
+  fprintf(stdout, "Resultat de la composition de p1 avec p2\n");
+  p7 = composition_polynome (p1,p2);
+  ecrire_polynome_float(p7);
 }
