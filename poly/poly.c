@@ -177,25 +177,17 @@ p_polyf_t puissance_polynome (p_polyf_t p, int n)
 
 
 
-
-float puissance_scalaire(float a,int n){
-  if(n<=1)return a;
-  else if(n%2==0)return puissance_scalaire(a*a,n/2);
-  else return a*puissance_scalaire(a*a,(n-1)/2);
-}
-
-
-
-
-
 p_polyf_t composition_polynome (p_polyf_t p, p_polyf_t q)
 {
+  p_polyf_t tmp;
   p_polyf_t res=creer_polynome(q->degre*p->degre);
   for(int i=0;i<p->degre;i++){
-    
+    tmp=multiplication_polynome_scalaire(puissance_polynome(q,i),p->coeff[i]);
+    for(int j=0;j<tmp->degre;j++){
+      res->coeff[j]+=tmp->coeff[j];
+    }
   }
-
-  return NULL ;
+  return res;
 }
 
 
