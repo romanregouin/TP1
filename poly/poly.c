@@ -176,7 +176,7 @@ p_polyf_t puissance_polynome (p_polyf_t p, int n)
   if(n<=1)return p;
   p_polyf_t res;
   if(n%2==0)res=puissance_polynome(multiplication_polynomes(p,p),n/2);
-  else res=multiplication_polynomes(p,puissance_polynome(multiplication_polynomes(p,p),n-1/2));
+  else res=multiplication_polynomes(p,puissance_polynome(multiplication_polynomes(p,p),(n-1)/2));
 
   return res ;
 }
