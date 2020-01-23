@@ -11,6 +11,12 @@ typedef struct {
   float *coeff;
 } polyf_t, *p_polyf_t;
 
+typedef  struct{
+  int degre;
+  float coeff;
+  polyf_creux_t* suivant;
+} polyf_creux_t ,*p_polyf_creux_t;
+
 p_polyf_t creer_polynome (int degre) ;
 
 void init_polynome (p_polyf_t p, float x) ;

@@ -137,7 +137,7 @@ p_polyf_t addition_polynome (p_polyf_t p1, p_polyf_t p2)
 p_polyf_t multiplication_polynome_scalaire (p_polyf_t p, float alpha)
 {
   p_polyf_t resultat=creer_polynome(p->degre);
-  for(int i=0;i<p->degre;i++){
+  for(int i=0;i<=p->degre;i++){
     resultat->coeff[i]=p->coeff[i]*alpha;
   }
 
@@ -184,11 +184,13 @@ p_polyf_t composition_polynome (p_polyf_t p, p_polyf_t q)
 {
   p_polyf_t tmp;
   p_polyf_t res=creer_polynome(q->degre*p->degre);
+  tmp=creer_polynome(0);
+  init_polynome(tmp,1);
   for(int i=0;i<=p->degre;i++){
-    tmp=multiplication_polynome_scalaire(puissance_polynome(q,i),p->coeff[i]);
     for(int j=0;j<=tmp->degre;j++){
-      res->coeff[j]+=tmp->coeff[j];
+      res->coeff[j]+=p->coeff[i]*tmp->coeff[j];
     }
+    tmp=multiplication_polynome(tmp,q);
   }
   return res;
 }
