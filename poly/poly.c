@@ -235,7 +235,6 @@ p_polyf_creux_t lire_polynome_creux_float(char* file_name){
     exit(-1);
   }
   p = creer_polynome_creux();
-  polyf_creux_t* last = p;
   while(res==1){
     res = fscanf(f,"%d",&degre);
     if(res!=1){
@@ -251,11 +250,7 @@ p_polyf_creux_t lire_polynome_creux_float(char* file_name){
     if(coef==0.0){
       total_coef_nuls++;
     }else{
-      polyf_creux_t* added = malloc();
-      added->coeff = coef;
-      added->degre = degre;
-      last->suivant = added;
-      last = last->suivant;
+      ajouter_monome(p,degre,coef);
     }
   }
   fclose(f);
@@ -296,7 +291,7 @@ p_polyf_creux_t ajouter_monome(p_polyf_creux_t p, int degre, float coef){
       new->suivant=p;
       return new;
     }
-    while(courant->degre<degre){
+    while(courant!=NULL && courant->degre<degre){
       avant=courant;
       courant=courant->suivant;
     }
