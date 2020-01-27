@@ -265,6 +265,7 @@ p_polyf_creux_t lire_polynome_creux_float(char* file_name){
 
 
 
+
 void detruire_polynome(p_polyf_creux_t p){
   if(p==NULL)return;
   p_polyf_creux_t tmp1,tmp2=p->suivant;
@@ -306,45 +307,3 @@ p_polyf_creux_t ajouter_monome(p_polyf_creux_t p, int degre, float coef){
 }
 
 
-
-
-p_polyf_creux_t lire_polynome_creux_float(char* file_name){
-  FILE *f;
-  int degre;
-  float coef;
-  int res;
-  int total_coef_nuls = 0;
-  p_polyf_creux_t p;
-
-  f = fopen(file_name,"r");
-  if(f==NULL){
-    fprintf(stderr, "Erreur d'ouverture de %s\n",file_name);
-    exit(-1);
-  }
-  p = creer_polynome_creux();
-  polyf_creux_t* last = p;
-  while(res==1){
-    res = fscanf(f,"%d",&degre);
-    if(res!=1){
-      fprintf(stderr, "Erreur lors de la lecture du degre\n");
-      exit(-1);
-    }
-    res = fscanf(f,"%f",&coef);
-    if(res!=1){
-      fprintf(stderr, "Erreur lors de la lecture des coefficients\n");
-      exit(-1);
-    }
-    //Mettre la précision des floats?
-    if(coef==0.0){
-      total_coef_nuls++;
-    }else{
-      polyf_creux_t* added = malloc();
-      added->coeff = coef;
-      added->degre = degre;
-      last->suivant = added;
-      last = last->suivant;
-    }
-  }
-  fclose(f);
-  return p;
-}
