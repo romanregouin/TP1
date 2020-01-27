@@ -287,14 +287,20 @@ p_polyf_creux_t ajouter_monome(p_polyf_creux_t p, int degre, float coef){
   //sinon
   }else{
     polyf_creux_t* courant = p;
+    polyf_creux_t* avant;
     polyf_creux_t* new = (polyf_creux_t*)malloc(sizeof(polyf_creux_t));
-    while(courant->suivant!=NULL){
-      courant=courant->suivant;
-    }
     new->coeff = coef;
     new->degre = degre;
-    new->suivant = NULL;
-    courant->suivant = new;
+    if(p->degre>degre){
+      new->suivant=p;
+      return new;
+    }
+    while(courant->degre<degre){
+      avant=courant;
+      courant=courant->suivant;
+    }
+    new->suivant = courant;
+    avant->suivant = new;
   }
   return p;
 }
