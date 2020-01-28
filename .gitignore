@@ -43,6 +43,7 @@ perf_poly
 *.su
 *.idb
 *.pdb
+*.vscode
 
 # Kernel Module Compile Results
 *.mod*

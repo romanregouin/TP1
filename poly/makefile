@@ -1,22 +1,27 @@
-all: test_poly perf_poly
+CC = gcc
+CFLAGS = -Wall -Werror -g
+SRC = $(wildcard *.c)
+OBJ = $(SRC:.c=.o)
+EXE = test_poly perf_poly
 
-GCC_OPT= -Wall
+all: $(EXE)
+
+#GCC_OPT= -Wall
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $^
 
 perf_poly: perf_poly.o poly.o
-	gcc -o perf_poly perf_poly.o poly.o
-
-perf_poly.o: perf_poly.c poly.h
-	gcc $(GCC_OPT) -c perf_poly.c
-
+	$(CC) $(CFLAGS) -o $@ $^
 
 test_poly: test_poly.o poly.o
-	gcc -o test_poly test_poly.o poly.o
+	$(CC) $(CFLAGS) -o $@ $^
 
-test_poly.o: test_poly.c poly.h
-	gcc $(GCC_OPT) -c test_poly.c
+perf_poly.o: poly.h
+test_poly.o: poly.h
+poly.o: poly.h
 
-poly.o: poly.c poly.h
-	gcc $(GCC_OPT) -c poly.c
+.PHONY : clean
 
 clean:
-	rm -f test_poly perf_poly *.o *~
+	rm -f $(EXE) $(OBJ)
