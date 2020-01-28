@@ -210,7 +210,7 @@ p_polyf_t composition_polynome (p_polyf_t p, p_polyf_t q)
 
 p_polyf_creux_t creer_polynome_creux(){
   p_polyf_creux_t p;
-  p = (p_polyf_creux_t) malloc(sizeof(polyf_creux_t));
+  p = (p_polyf_creux_t) malloc(sizeof(p_polyf_creux_t));
   if(p==NULL){
     fprintf(stderr, "Erreur mémoire\n");
     exit(-1);
@@ -250,15 +250,7 @@ p_polyf_creux_t lire_polynome_creux_float(char* file_name){
     if(coef==0.0){
       total_coef_nuls++;
     }else{
-<<<<<<< Updated upstream
       p=ajouter_monome(p,degre,coef);
-=======
-      polyf_creux_t* added = (polyf_creux_t*)malloc(sizeof(polyf_creux_t));
-      added->coeff = coef;
-      added->degre = degre;
-      last->suivant = added;
-      last = last->suivant;
->>>>>>> Stashed changes
     }
   }
   fclose(f);
@@ -269,13 +261,14 @@ p_polyf_creux_t lire_polynome_creux_float(char* file_name){
 
 
 
-void detruire_polynome(p_polyf_creux_t p){
+void detruire_polynome_creux(p_polyf_creux_t p){
   if(p==NULL)return;
-  p_polyf_creux_t tmp1,tmp2=p->suivant;
+  polyf_creux_t *tmp1,*tmp2;
+  tmp2=(polyf_creux_t*)p->suivant;
   free(p);
   while(tmp2!=NULL){
     tmp1=tmp2;
-    tmp2=tmp2->suivant;
+    tmp2=(polyf_creux_t*)tmp2->suivant;
     free(tmp1);
   }
 }
@@ -310,7 +303,7 @@ p_polyf_creux_t ajouter_monome(p_polyf_creux_t p, int degre, float coef){
 }
 
 
-void ecrire_polynome_float (p_polyf_creux_t p)
+void ecrire_polynome_float_creux (p_polyf_creux_t p)
 {
   p_polyf_creux_t courant=p;
   if(p->degre==0){
@@ -329,7 +322,7 @@ void ecrire_polynome_float (p_polyf_creux_t p)
 
 
 
-p_polyf_creux_t addition_polynome (p_polyf_creux_t p1, p_polyf_creux_t p2)
+p_polyf_creux_t addition_polynome_creux (p_polyf_creux_t p1, p_polyf_creux_t p2)
 {
   p_polyf_creux_t p3 ;
   register unsigned int i ;
