@@ -210,7 +210,11 @@ p_polyf_t composition_polynome (p_polyf_t p, p_polyf_t q)
 
 p_polyf_creux_t creer_polynome_creux(){
   p_polyf_creux_t p;
+<<<<<<< HEAD
   p = (p_polyf_creux_t) malloc(sizeof(p_polyf_creux_t));
+=======
+  p = (p_polyf_creux_t) malloc(sizeof(struct polyf_creux_t));
+>>>>>>> 51c15b4213122519d7d841160fd8c9766e933fd6
   if(p==NULL){
     fprintf(stderr, "Erreur mémoire\n");
     exit(-1);
@@ -220,6 +224,34 @@ p_polyf_creux_t creer_polynome_creux(){
   p->suivant = NULL;
   return p;
 }
+
+p_polyf_creux_t ajouter_monome_creux(p_polyf_creux_t p, int degre, float coef){
+  //p ne contient encore aucun monome
+  if(p->coeff==0.0){
+    p->coeff = coef;
+    p->degre = degre;
+  //sinon
+  }else{
+    p_polyf_creux_t courant = p;
+    p_polyf_creux_t avant;
+    p_polyf_creux_t new = malloc(sizeof(struct polyf_creux_t));
+    new->coeff = coef;
+    new->degre = degre;
+    if(p->degre>degre){
+      new->suivant=p;
+      return new;
+    }
+    while(courant!=NULL && courant->degre<degre){
+      avant=courant;
+      courant=courant->suivant;
+    }
+    new->suivant = courant;
+    avant->suivant = new;
+  }
+  return p;
+}
+
+
 
 p_polyf_creux_t lire_polynome_creux_float(char* file_name){
   FILE *f;
@@ -250,7 +282,7 @@ p_polyf_creux_t lire_polynome_creux_float(char* file_name){
     if(coef==0.0){
       total_coef_nuls++;
     }else{
-      p=ajouter_monome(p,degre,coef);
+      p=ajouter_monome_creux(p,degre,coef);
     }
   }
   fclose(f);
@@ -276,34 +308,13 @@ void detruire_polynome_creux(p_polyf_creux_t p){
 
 
 
-p_polyf_creux_t ajouter_monome(p_polyf_creux_t p, int degre, float coef){
-  //p ne contient encore aucun monome
-  if(p->coeff==0.0){
-    p->coeff = coef;
-    p->degre = degre;
-  //sinon
-  }else{
-    polyf_creux_t* courant = p;
-    polyf_creux_t* avant;
-    polyf_creux_t* new = (polyf_creux_t*)malloc(sizeof(polyf_creux_t));
-    new->coeff = coef;
-    new->degre = degre;
-    if(p->degre>degre){
-      new->suivant=p;
-      return new;
-    }
-    while(courant!=NULL && courant->degre<degre){
-      avant=courant;
-      courant=courant->suivant;
-    }
-    new->suivant = courant;
-    avant->suivant = new;
-  }
-  return p;
-}
 
 
+<<<<<<< HEAD
 void ecrire_polynome_float_creux (p_polyf_creux_t p)
+=======
+void ecrire_polynome_creux_float (p_polyf_creux_t p)
+>>>>>>> 51c15b4213122519d7d841160fd8c9766e933fd6
 {
   p_polyf_creux_t courant=p;
   if(p->degre==0){
@@ -325,22 +336,21 @@ void ecrire_polynome_float_creux (p_polyf_creux_t p)
 p_polyf_creux_t addition_polynome_creux (p_polyf_creux_t p1, p_polyf_creux_t p2)
 {
   p_polyf_creux_t p3 ;
-  register unsigned int i ;
   
-  p3 = creer_polynome (max (p1->degre, p2->degre));
+  p3 = creer_polynome_creux (max (p1->degre, p2->degre));
   p_polyf_creux_t courant1,courant2;
 
   while(courant1!= NULL || courant2!=NULL)
     {
       if(courant1!= NULL && courant2!=NULL && courant1->degre==courant2->degre){
-        p3=ajouter_monome(p3,courant1->degre,courant1->coeff+courant2->coeff);
+        p3=ajouter_monome_creux(p3,courant1->degre,courant1->coeff+courant2->coeff);
         courant1=courant1->suivant;
         courant2=courant2->suivant;
       }if(courant1!= NULL && courant1->degre<courant2->degre){
-        p3=ajouter_monome(p3,courant1->degre,courant1->coeff);
+        p3=ajouter_monome_creux(p3,courant1->degre,courant1->coeff);
         courant1=courant1->suivant;
       }else if(courant2!= NULL && courant1->degre>courant2->degre){
-        p3=ajouter_monome(p3,courant1->degre,courant2->coeff);
+        p3=ajouter_monome_creux(p3,courant1->degre,courant2->coeff);
         courant2=courant2->suivant;
       }
     }
