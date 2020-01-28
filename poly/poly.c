@@ -337,31 +337,19 @@ p_polyf_creux_t addition_polynome (p_polyf_creux_t p1, p_polyf_creux_t p2)
   p3 = creer_polynome (max (p1->degre, p2->degre));
   p_polyf_creux_t courant1,courant2;
 
-  while(courant1!= NULL && courant2!=NULL)
+  while(courant1!= NULL || courant2!=NULL)
     {
-      if(courant1->degre==courant2->degre){
+      if(courant1!= NULL && courant2!=NULL && courant1->degre==courant2->degre){
         p3=ajouter_monome(p3,courant1->degre,courant1->coeff+courant2->coeff);
         courant1=courant1->suivant;
         courant2=courant2->suivant;
-      }if(courant1->degre<courant2->degre){
+      }if(courant1!= NULL && courant1->degre<courant2->degre){
         p3=ajouter_monome(p3,courant1->degre,courant1->coeff);
         courant1=courant1->suivant;
-      }else{
+      }else if(courant2!= NULL && courant1->degre>courant2->degre){
         p3=ajouter_monome(p3,courant1->degre,courant2->coeff);
         courant2=courant2->suivant;
       }
     }
-
-  if (p1->degre > p2->degre)
-    {
-      for (i = (p2->degre + 1) ; i <= p1->degre; ++i)
-	p3->coeff [i] = p1->coeff [i] ;
-    }
-  else if (p2->degre > p1->degre)
-    {
-      for (i = (p1->degre + 1) ; i <= p2->degre; ++i)
-	p3->coeff [i] = p2->coeff [i] ;
-    }
-    
   return p3 ;
 }
