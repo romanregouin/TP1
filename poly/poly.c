@@ -210,11 +210,7 @@ p_polyf_t composition_polynome (p_polyf_t p, p_polyf_t q)
 
 p_polyf_creux_t creer_polynome_creux(){
   p_polyf_creux_t p;
-<<<<<<< HEAD
-  p = (p_polyf_creux_t) malloc(sizeof(p_polyf_creux_t));
-=======
   p = (p_polyf_creux_t) malloc(sizeof(struct polyf_creux_t));
->>>>>>> 51c15b4213122519d7d841160fd8c9766e933fd6
   if(p==NULL){
     fprintf(stderr, "Erreur mémoire\n");
     exit(-1);
@@ -295,12 +291,11 @@ p_polyf_creux_t lire_polynome_creux_float(char* file_name){
 
 void detruire_polynome_creux(p_polyf_creux_t p){
   if(p==NULL)return;
-  polyf_creux_t *tmp1,*tmp2;
-  tmp2=(polyf_creux_t*)p->suivant;
+  p_polyf_creux_t tmp1,tmp2=p->suivant;
   free(p);
   while(tmp2!=NULL){
     tmp1=tmp2;
-    tmp2=(polyf_creux_t*)tmp2->suivant;
+    tmp2=tmp2->suivant;
     free(tmp1);
   }
 }
@@ -310,11 +305,7 @@ void detruire_polynome_creux(p_polyf_creux_t p){
 
 
 
-<<<<<<< HEAD
-void ecrire_polynome_float_creux (p_polyf_creux_t p)
-=======
 void ecrire_polynome_creux_float (p_polyf_creux_t p)
->>>>>>> 51c15b4213122519d7d841160fd8c9766e933fd6
 {
   p_polyf_creux_t courant=p;
   if(p->degre==0){
