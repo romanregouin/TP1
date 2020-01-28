@@ -2,18 +2,26 @@
 #include <stdlib.h>
 
 #include "poly.h"
-
+inline int test_polynomes(int argc, char **argv);
+inline int test_polynomes_creux(int argc, char **argv);
 
 int main (int argc, char **argv)
-{
-  p_polyf_t p1, p2, p3, p5, p6, p7;
-  
+{  
   if (argc != 6)
     {
       fprintf (stderr, "5 paramètres (polynomes1(fichier),polynomes2(fichier),scalaire,x,puissance) sont à passer \n") ;
       exit (-1) ;
     }
-      
+  test_polynomes(argc,argv);
+  test_polynomes_creux(argc,argv);
+
+}
+
+int test_polynomes(int argc, char **argv){
+  
+  p_polyf_t p1, p2, p3, p5, p6, p7;
+  
+  fprintf(stdout, "Début des tests sur les polynômes\n");
   p1 = lire_polynome_float (argv [1]) ;
   p2 = lire_polynome_float (argv [2]) ;
 
@@ -59,4 +67,17 @@ int main (int argc, char **argv)
   fprintf(stdout, "Resultat de la composition de p1 avec p2\n");
   p7 = composition_polynome (p1,p2);
   ecrire_polynome_float(p7);
+
+  fprintf(stdout, "Fin des tests sur les polynômes\n");
+  return 0;
+}
+
+int test_polynomes_creux(int argc, char **argv){
+  
+  //p_polyf_t p1, p2, p3, p5, p6, p7;
+  
+  fprintf(stdout, "Début des tests sur les polynômes creux\n");
+
+  fprintf(stdout, "Fin des tests sur les polynômes\n");
+  return 0;
 }

@@ -250,7 +250,15 @@ p_polyf_creux_t lire_polynome_creux_float(char* file_name){
     if(coef==0.0){
       total_coef_nuls++;
     }else{
+<<<<<<< Updated upstream
       p=ajouter_monome(p,degre,coef);
+=======
+      polyf_creux_t* added = (polyf_creux_t*)malloc(sizeof(polyf_creux_t));
+      added->coeff = coef;
+      added->degre = degre;
+      last->suivant = added;
+      last = last->suivant;
+>>>>>>> Stashed changes
     }
   }
   fclose(f);
