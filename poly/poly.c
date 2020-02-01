@@ -82,6 +82,8 @@ void ecrire_polynome_float (p_polyf_t p)
 {
   int i ;
 
+  printf ("->");
+
   printf ("%f + %f x ", p->coeff [0], p->coeff [1]) ;
   
   for (i = 2 ; i <= p->degre; i++)
@@ -173,6 +175,7 @@ p_polyf_t multiplication_polynomes (p_polyf_t p1, p_polyf_t p2)
   return resultat ;
 }
 
+//ne prend pas en compte le cas ou on éléve à la puisssance 0 un polynôme.
 p_polyf_t puissance_polynome (p_polyf_t p, int n)
 {
   if(n<=1)return p;
@@ -222,8 +225,12 @@ p_polyf_creux_t creer_polynome_creux(){
 }
 
 p_polyf_creux_t ajouter_monome_creux(p_polyf_creux_t p, int degre, float coef){
+  //on ne peut pas ajouter de coeff 0
+  if(coef==0.0){
+    return p;
+  }
   //p ne contient encore aucun monome
-  if(p->coeff==0.0){
+  if((p->coeff==0.0)&&(p->degre==0)){
     p->coeff = coef;
     p->degre = degre;
   //sinon
@@ -237,12 +244,16 @@ p_polyf_creux_t ajouter_monome_creux(p_polyf_creux_t p, int degre, float coef){
       new->suivant=p;
       return new;
     }
-    while(courant!=NULL && courant->degre<degre){
+    while((courant!=NULL) && (courant->degre<degre)){
       avant=courant;
       courant=courant->suivant;
     }
-    new->suivant = courant;
-    avant->suivant = new;
+    if((courant!=NULL)&&(courant->degre==degre)){
+      courant->coeff += coef;
+    }else{
+      new->suivant = courant;
+      avant->suivant = new;
+    }
   }
   return p;
 }
@@ -301,6 +312,7 @@ void detruire_polynome_creux(p_polyf_creux_t p){
 void ecrire_polynome_float_creux (p_polyf_creux_t p)
 {
   p_polyf_creux_t courant=p;
+  printf ("->");
   if(courant->suivant!=NULL){
     if(courant->degre==0){
         printf ("%f +", p->coeff);
@@ -378,19 +390,76 @@ p_polyf_creux_t addition_polynome_creux (p_polyf_creux_t p1, p_polyf_creux_t p2)
 }
 
 p_polyf_creux_t multiplication_polynome_scalaire_creux (p_polyf_creux_t p, float alpha){
-  return NULL;
+  p_polyf_creux_t res = creer_polynome_creux();
+  if(p==NULL){
+    return NULL;
+  }
+  p_polyf_creux_t courant = p;
+  while(courant->suivant!=NULL){
+    res = ajouter_monome_creux(res,courant->degre,(courant->coeff)*alpha);
+    courant = courant->suivant;
+  }
+  res = ajouter_monome_creux(res,courant->degre,(courant->coeff)*alpha);
+  return res;
 }
 
 float eval_polynome_creux (p_polyf_creux_t p, float x){
-  return 0.0;
+  float res = 0.0;
+  if(p==NULL){
+    return 0;
+  }
+  p_polyf_creux_t courant = p;
+  float tmp = 1;
+  int deg_tmp = 0;
+  while(courant->suivant!=NULL){
+    while(deg_tmp<courant->degre){
+      tmp *= x;
+      deg_tmp++;
+    }
+    res += courant->coeff*tmp;
+    courant = courant->suivant;
+  }
+  while(deg_tmp<courant->degre){
+    tmp *= x;
+    deg_tmp++;
+  }
+  res += courant->coeff*tmp;
+  return res;
 }
 
 p_polyf_creux_t multiplication_polynomes_creux (p_polyf_creux_t p1, p_polyf_creux_t p2){
-  return NULL;
+  if((p1==NULL)||(p2==NULL)){
+    return NULL;
+  }
+  p_polyf_creux_t p = creer_polynome_creux();
+  p_polyf_creux_t courant_p1 = p1;
+  p_polyf_creux_t courant_p2 = p2;
+  while(courant_p1->suivant!=NULL){
+    while(courant_p2->suivant!=NULL){
+      p = ajouter_monome_creux(p,(courant_p1->degre)+(courant_p2->degre),(courant_p1->coeff)*(courant_p2->coeff));
+      courant_p2 = courant_p2->suivant;
+    }
+    p = ajouter_monome_creux(p,(courant_p1->degre)+(courant_p2->degre),(courant_p1->coeff)*(courant_p2->coeff));
+    courant_p1 = courant_p1->suivant;
+    courant_p2 = p2;
+  }
+  while(courant_p2->suivant!=NULL){
+    p = ajouter_monome_creux(p,(courant_p1->degre)+(courant_p2->degre),(courant_p1->coeff)*(courant_p2->coeff));
+    courant_p2 = courant_p2->suivant;
+  }
+  p = ajouter_monome_creux(p,(courant_p1->degre)+(courant_p2->degre),(courant_p1->coeff)*(courant_p2->coeff));
+  return p;
 }
 
 p_polyf_creux_t puissance_polynome_creux (p_polyf_creux_t p, int n){
-  return NULL;
+  if(n<=1){
+    return p;
+  }
+  if(n%2==0){
+    return puissance_polynome_creux(multiplication_polynomes_creux(p,p),n/2);
+  }else{
+    return multiplication_polynomes_creux(p,puissance_polynome_creux(multiplication_polynomes_creux(p,p),(n-1)/2));
+  }
 }
 
 p_polyf_creux_t composition_polynome_creux (p_polyf_creux_t p, p_polyf_creux_t q){

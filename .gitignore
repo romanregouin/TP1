@@ -44,6 +44,7 @@ perf_poly
 *.idb
 *.pdb
 *.vscode
+*.json
 
 # Kernel Module Compile Results
 *.mod*
