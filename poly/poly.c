@@ -258,7 +258,22 @@ p_polyf_creux_t ajouter_monome_creux(p_polyf_creux_t p, int degre, float coef){
   return p;
 }
 
-
+p_polyf_creux_t ajouter_poly_creux(p_polyf_creux_t p, p_polyf_creux_t q){
+  p_polyf_creux_t res = creer_polynome_creux();
+  p_polyf_creux_t  courant = p;
+  while(courant->suivant!=NULL){
+    res = ajouter_monome_creux(res,courant->degre,courant->coeff);
+    courant = courant->suivant;
+  }
+  res = ajouter_monome_creux(res,courant->degre,courant->coeff);
+  courant = q;
+  while(courant->suivant!=NULL){
+    res = ajouter_monome_creux(res,courant->degre,courant->coeff);
+    courant = courant->suivant;
+  }
+  res = ajouter_monome_creux(res,courant->degre,courant->coeff);
+  return res;
+}
 
 p_polyf_creux_t lire_polynome_creux_float(char* file_name){
   FILE *f;
@@ -463,5 +478,18 @@ p_polyf_creux_t puissance_polynome_creux (p_polyf_creux_t p, int n){
 }
 
 p_polyf_creux_t composition_polynome_creux (p_polyf_creux_t p, p_polyf_creux_t q){
-  return NULL;
+  p_polyf_creux_t res = creer_polynome_creux();
+  p_polyf_creux_t courant_p = p;
+  if((p==NULL)||(q==NULL)){
+    return NULL;
+  }
+  if(courant_p->degre==0){
+    res = ajouter_monome_creux(res,courant_p->degre,courant_p->coeff);
+    courant_p = courant_p->suivant; 
+  }
+  while(courant_p!=NULL){
+    res = ajouter_poly_creux(res,multiplication_polynome_scalaire_creux(puissance_polynome_creux(q,courant_p->degre),courant_p->coeff));
+    courant_p = courant_p->suivant;
+  }
+  return res;
 }

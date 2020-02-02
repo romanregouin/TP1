@@ -123,6 +123,6 @@ int test_polynomes_creux(int argc, char **argv){
   p3 = composition_polynome_creux (p1,p2);
   ecrire_polynome_float_creux(p3);
 
-  fprintf(stdout, "Fin des tests sur les polynômes.\n\n");
+  fprintf(stdout, "Fin des tests sur les polynômes.\n");
   return 0;
 }
