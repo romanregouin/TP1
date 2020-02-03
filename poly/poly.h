@@ -41,6 +41,8 @@ p_polyf_t multiplication_polynomes (p_polyf_t p1, p_polyf_t p2) ;
 
 p_polyf_t puissance_polynome (p_polyf_t p, int n) ;
 
+p_polyf_t exponentiation_rapide(p_polyf_t p,int n);
+
 p_polyf_t composition_polynome (p_polyf_t p, p_polyf_t q) ;
 
 p_polyf_creux_t creer_polynome_creux();
