@@ -490,6 +490,7 @@ p_polyf_creux_t multiplication_polynomes_creux (p_polyf_creux_t p1, p_polyf_creu
 
 p_polyf_creux_t puissance_polynome_creux (p_polyf_creux_t p, int n){
   p_polyf_creux_t res = creer_polynome_creux();
+  p_polyf_creux_t tmp;
   if(n==0){
     return ajouter_monome_creux(res,0,1);
   }
@@ -497,9 +498,15 @@ p_polyf_creux_t puissance_polynome_creux (p_polyf_creux_t p, int n){
     return ajouter_poly_creux(res,p);
   }
   if(n%2==0){
-    return puissance_polynome_creux(multiplication_polynomes_creux(p,p),n/2);
+    tmp = multiplication_polynomes_creux(p,p);
+    res = puissance_polynome_creux(tmp,n/2);
+    detruire_polynome_creux(tmp);
+    return res;
   }else{
-    return multiplication_polynomes_creux(p,puissance_polynome_creux(multiplication_polynomes_creux(p,p),(n-1)/2));
+    tmp = multiplication_polynomes_creux(p,p);
+    res= multiplication_polynomes_creux(p,puissance_polynome_creux(tmp,(n-1)/2));
+    detruire_polynome_creux(tmp);
+    return res;
   }
 }
 
