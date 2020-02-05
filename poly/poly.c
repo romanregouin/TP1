@@ -262,6 +262,7 @@ p_polyf_creux_t creer_polynome_creux(){
   return p;
 }
 
+//ne crée pas de nouveau polynome mais modifie p!
 p_polyf_creux_t ajouter_monome_creux(p_polyf_creux_t p, int degre, float coef){
   //on ne peut pas ajouter de coeff 0
   if(coef==0.0){
@@ -278,6 +279,7 @@ p_polyf_creux_t ajouter_monome_creux(p_polyf_creux_t p, int degre, float coef){
     p_polyf_creux_t new = malloc(sizeof(struct polyf_creux_t));
     new->coeff = coef;
     new->degre = degre;
+    new->suivant = NULL;
     if(p->degre>degre){
       new->suivant=p;
       return new;
@@ -288,6 +290,7 @@ p_polyf_creux_t ajouter_monome_creux(p_polyf_creux_t p, int degre, float coef){
     }
     if((courant!=NULL)&&(courant->degre==degre)){
       courant->coeff += coef;
+      detruire_polynome_creux(new);
     }else{
       new->suivant = courant;
       avant->suivant = new;
@@ -353,12 +356,7 @@ p_polyf_creux_t lire_polynome_creux_float(char* file_name){
 
 void detruire_polynome_creux(p_polyf_creux_t p){
   if(p==NULL)return;
-  p_polyf_creux_t tmp1,tmp2;
-  if(p->suivant!=NULL){
-    tmp2=p->suivant;
-  }else{
-    tmp2=p;
-  }
+  p_polyf_creux_t tmp1,tmp2=p->suivant;
   free(p);
   while(tmp2!=NULL){
     tmp1=tmp2;
@@ -512,23 +510,27 @@ p_polyf_creux_t multiplication_polynomes_creux (p_polyf_creux_t p1, p_polyf_creu
 
 p_polyf_creux_t puissance_polynome_creux (p_polyf_creux_t p, int n){
   p_polyf_creux_t res = creer_polynome_creux();
-  p_polyf_creux_t tmp,tmp2;
+  p_polyf_creux_t tmp,tmp2,tmp3;
   if(n==0){
     return ajouter_monome_creux(res,0,1);
   }
   if(n<=1){
-    return ajouter_poly_creux(res,p);
+    tmp3 = ajouter_poly_creux(res,p);
+    detruire_polynome_creux(res);
+    return tmp3;
   }
   if(n%2==0){
     tmp = multiplication_polynomes_creux(p,p);
+    detruire_polynome_creux(res);
     res = puissance_polynome_creux(tmp,n/2);
     detruire_polynome_creux(tmp);
     return res;
   }else{
     tmp = multiplication_polynomes_creux(p,p);
-    tmp2=puissance_polynome_creux(tmp,(n-1)/2);
-    res= multiplication_polynomes_creux(p,tmp2);
+    tmp2 = puissance_polynome_creux(tmp,(n-1)/2);
     detruire_polynome_creux(tmp);
+    detruire_polynome_creux(res);
+    res = multiplication_polynomes_creux(p,tmp2);
     detruire_polynome_creux(tmp2);
     return res;
   }
@@ -537,8 +539,9 @@ p_polyf_creux_t puissance_polynome_creux (p_polyf_creux_t p, int n){
 p_polyf_creux_t composition_polynome_creux (p_polyf_creux_t p, p_polyf_creux_t q){
   p_polyf_creux_t res = creer_polynome_creux();
   p_polyf_creux_t courant_p = p;
-  p_polyf_creux_t tmp1,tmp2;
+  p_polyf_creux_t tmp1,tmp2,tmp3;
   if((p==NULL)||(q==NULL)){
+    detruire_polynome_creux(res);
     return NULL;
   }
   if(courant_p->degre==0){
@@ -546,9 +549,13 @@ p_polyf_creux_t composition_polynome_creux (p_polyf_creux_t p, p_polyf_creux_t q
     courant_p = courant_p->suivant; 
   }
   while(courant_p!=NULL){
-    tmp1=puissance_polynome_creux(q,courant_p->degre);
-    tmp2=multiplication_polynome_scalaire_creux(tmp1,courant_p->coeff);
-    res = ajouter_poly_creux(res,tmp2);
+    tmp1 = puissance_polynome_creux(q,courant_p->degre);
+    tmp2 = multiplication_polynome_scalaire_creux(tmp1,courant_p->coeff);
+    detruire_polynome_creux(tmp1);
+    tmp3 = ajouter_poly_creux(res,tmp2);
+    detruire_polynome_creux(tmp2);
+    detruire_polynome_creux(res);
+    res = tmp3;
     courant_p = courant_p->suivant;
     detruire_polynome_creux(tmp1);
     detruire_polynome_creux(tmp2);
