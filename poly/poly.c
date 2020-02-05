@@ -245,6 +245,7 @@ p_polyf_t composition_polynome (p_polyf_t p, p_polyf_t q)
 
 
 
+
 //============================Polynome Creux ==================================
 
 
@@ -557,8 +558,6 @@ p_polyf_creux_t composition_polynome_creux (p_polyf_creux_t p, p_polyf_creux_t q
     detruire_polynome_creux(res);
     res = tmp3;
     courant_p = courant_p->suivant;
-    detruire_polynome_creux(tmp1);
-    detruire_polynome_creux(tmp2);
   }
   return res;
 }
