@@ -5,6 +5,8 @@
 
 #include <x86intrin.h>
 
+//extern int compteur;
+
 int deg_max(p_polyf_creux_t p){
   p_polyf_creux_t courant = p;
   if(courant==NULL){
@@ -84,14 +86,18 @@ int main (int argc, char **argv)
   printf ("p3 = ") ;
   ecrire_polynome_float (p3) ;
   printf ("addition %Ld cycles\n", end-start) ;
-  calcul_flop ("p1+p2", min(p1->degre, p2->degre)+1, end-start) ;
+  calcul_flop ("p1 * alpha", min(p1->degre, p2->degre)+1, end-start) ;
+  //calcul_flop ("p1*alpha",compteur, end-start) ;
   detruire_polynome (p3);
+
+  //compteur = 0;
 
   start = _rdtsc();
   p_creux3 = multiplication_polynome_scalaire_creux(p_creux1,alpha);
   end = _rdtsc();
   printf("addition %Ld cycles\n",end-start);
-  calcul_flop("p1 creux + p2 creux",degre,end-start);
+  calcul_flop("p1 creux * alpha",degre,end-start);
+  //calcul_flop("p1 creux * alpha",compteur,end-start);
   detruire_polynome_creux(p_creux3);
 
   start = _rdtsc();
@@ -99,14 +105,14 @@ int main (int argc, char **argv)
   end = _rdtsc();
   printf ("res = %f\n",res) ;
   printf ("addition %Ld cycles\n", end-start) ;
-  calcul_flop ("p1+p2", min(p1->degre, p2->degre)+1, end-start) ;
+  calcul_flop ("eval de p1", (min(p1->degre, p2->degre)+1)*2, end-start) ;
 
   start = _rdtsc();
-  p_creux3 = eval_polynome_creux(p_creux1,beta);
+  res = eval_polynome_creux(p_creux1,beta);
   end = _rdtsc();
-  printf("addition %Ld cycles\n",end-start);
-  calcul_flop("p1 creux + p2 creux",degre,end-start);
-  detruire_polynome_creux(p_creux3);
+  printf ("res = %f\n",res) ;
+  printf ("addition %Ld cycles\n", end-start) ;
+  calcul_flop ("eval de p1 creux", (deg_max(p_creux1)+1)*2, end-start) ;
 
 
   /*

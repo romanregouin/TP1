@@ -140,6 +140,7 @@ p_polyf_t multiplication_polynome_scalaire (p_polyf_t p, float alpha)
   p_polyf_t resultat=creer_polynome(p->degre);
   for(int i=0;i<=p->degre;i++){
     resultat->coeff[i]=p->coeff[i]*alpha;
+    //compteur++;
   }
 
   return resultat;
@@ -469,8 +470,10 @@ p_polyf_creux_t multiplication_polynome_scalaire_creux (p_polyf_creux_t p, float
   while(courant->suivant!=NULL){
     res = ajouter_monome_creux(res,courant->degre,(courant->coeff)*alpha);
     courant = courant->suivant;
+    //compteur++;
   }
   res = ajouter_monome_creux(res,courant->degre,(courant->coeff)*alpha);
+  //compteur++;
   return res;
 }
 

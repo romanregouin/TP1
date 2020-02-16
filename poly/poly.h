@@ -6,6 +6,8 @@
 #define max(a,b) ((a)>(b)?(a):(b))
 #define min(a,b) ((a)<(b)?(a):(b))
 
+//static int compteur = 0;
+
 typedef struct {
   int degre ;
   float *coeff;
