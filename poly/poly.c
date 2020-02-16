@@ -101,15 +101,12 @@ int egalite_polynome (p_polyf_t p1, p_polyf_t p2)
   if(p1==NULL||p2==NULL){
     return 0;
   }
-  if(p1->degre==p2->degre){
-    for(int i=0;i<=p1->degre;i++){
-      if(p1->coeff[i]!=p2->coeff[i]){
-        return 0;
-      }
+  for(int i=0;i<=max(p1->degre,p2->degre);i++){
+    if(p1->coeff[i]!=p2->coeff[i]){
+      return 0;
     }
-    return 1;
   }
-  return 0;
+  return 1;
 }
 
 p_polyf_t addition_polynome (p_polyf_t p1, p_polyf_t p2)
@@ -403,6 +400,9 @@ int egalite_polynome_creux (p_polyf_creux_t p1, p_polyf_creux_t p2){
   if((courant_p1->suivant==NULL)&&(courant_p2->suivant==NULL)){
     return 1;
   }
+  if((courant_p1->suivant==NULL)||(courant_p2->suivant==NULL)){
+    return 0;
+  }
   if(!(courant_p1->suivant!=NULL)&&(courant_p2->suivant!=NULL)){
     return 0;
   }
@@ -414,6 +414,9 @@ int egalite_polynome_creux (p_polyf_creux_t p1, p_polyf_creux_t p2){
     }
     if((courant_p1->suivant==NULL)&&(courant_p2->suivant==NULL)){
       return 1;
+    }
+    if((courant_p1->suivant==NULL)||(courant_p2->suivant==NULL)){
+    return 0;
     }
     if(!(courant_p1->suivant!=NULL)&&(courant_p2->suivant!=NULL)){
       return 0;
@@ -429,6 +432,8 @@ p_polyf_creux_t addition_polynome_creux (p_polyf_creux_t p1, p_polyf_creux_t p2)
   
   p3 = creer_polynome_creux (max (p1->degre, p2->degre));
   p_polyf_creux_t courant1,courant2;
+  courant1 = p1;
+  courant2 = p2;
 
   while(courant1!= NULL || courant2!=NULL)
     {
@@ -436,12 +441,20 @@ p_polyf_creux_t addition_polynome_creux (p_polyf_creux_t p1, p_polyf_creux_t p2)
         p3=ajouter_monome_creux(p3,courant1->degre,courant1->coeff+courant2->coeff);
         courant1=courant1->suivant;
         courant2=courant2->suivant;
-      }if(courant1!= NULL && courant1->degre<courant2->degre){
+      }else if(courant1!= NULL && courant2!=NULL && courant1->degre<courant2->degre){
         p3=ajouter_monome_creux(p3,courant1->degre,courant1->coeff);
         courant1=courant1->suivant;
-      }else if(courant2!= NULL && courant1->degre>courant2->degre){
+      }else if(courant1!= NULL && courant2!=NULL && courant1->degre>courant2->degre){
         p3=ajouter_monome_creux(p3,courant1->degre,courant2->coeff);
         courant2=courant2->suivant;
+      }else{
+        if(courant1==NULL){
+          p3 = ajouter_monome_creux(p3,courant2->degre,courant2->coeff);
+          courant2 = courant2->suivant;
+        }else{
+          p3 = ajouter_monome_creux(p3,courant1->degre,courant1->coeff);
+          courant1 = courant1->suivant;
+        }
       }
     }
   return p3 ;

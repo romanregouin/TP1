@@ -37,6 +37,13 @@
 *.hex
 test_poly
 perf_poly
+test_egalite_poly
+test_addition_poly
+test_multiplication_scalaire
+test_eval_poly
+test_multiplication_poly
+test_puissance_poly
+test_composition_poly
 
 # Debug files
 *.dSYM/
